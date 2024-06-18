@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs"
-import { generateTokenAndSetCookie } from "../utils/generateToken,.js";
+import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
 
 export const signUp = async (req , res)=>{
 
@@ -67,16 +67,16 @@ export const login = async (req , res)=>{
 
         generateTokenAndSetCookie(user._id , res) ; 
         
-			res.status(201).json({
-				_id: newUser._id,
-				fullName: newUser.fullName,
-				username: newUser.username,
-				email: newUser.email,
-				followers: newUser.followers,
-				following: newUser.following,
-				profileImg: newUser.profileImg,
-				coverImg: newUser.coverImg,
-			});
+        res.status(200).json({
+			_id: user._id,
+			fullName: user.fullName,
+			username: user.username,
+			email: user.email,
+			followers: user.followers,
+			following: user.following,
+			profileImg: user.profileImg,
+			coverImg: user.coverImg,
+		});
 
 
     }catch(error){
@@ -101,7 +101,7 @@ export const logout = async (req,res)=>{
 export const getMe = async (req , res)=>{
     try{
 
-        const user = await User.findById(req.user._id).select("--password") ; 
+        const user = await User.findById(req.user._id).select("-password") ; 
         return res.status(200).json(user) ; 
 
     }catch(error){

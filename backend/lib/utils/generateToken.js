@@ -2,13 +2,11 @@ import jwt from "jsonwebtoken";
 
 export const generateTokenAndSetCookie = (userId , res)=>{
 
-    const token = jwt.sign({userId} , process.env.JWT_SECRET , {
+    const token = jwt.sign({userId} , process.env.SECRET_KEY , {
         expiresIn : "15d" 
     })
 
-    //sending the tooken via cookie
-
-    res.cookie("jwt-token" , token , {
+    res.cookie("jwt" , token , {
         maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true, // prevent XSS attacks cross-site scripting attacks
 		sameSite: "strict", // CSRF attacks cross-site request forgery attacks
