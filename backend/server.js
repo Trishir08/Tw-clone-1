@@ -1,6 +1,7 @@
 import express, { urlencoded } from "express"
 import userRoutes from './routes/user.routes.js'
 import authRoutes from "./routes/auth.router.js"
+import postRoutes from './routes/post.router.js'
 import dotenv from "dotenv"
 import { dataBaseConnect } from "./config/dataBase.js";
 import cookieParser from "cookie-parser";
@@ -24,6 +25,7 @@ app.use(cookieParser()) ;
 
 app.use('/api/auth' , authRoutes) ; 
 app.use('/api/user' , userRoutes) ; 
+app.use('/api/post' , postRoutes ) ; 
 
 app.listen(PORT, ()=>{
     console.log(`the server is running on port ${PORT}`);
