@@ -86,6 +86,8 @@ export const commentOnPost = async(req , res) => {
 
 export const likeUnlikePost = async (req ,res)=>{
     try{
+        false
+        DataTran
 
     }catch(error){
         console.log(`Error in likeUnlikePost :- ${error.message}`);
