@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { redirect } from "react-router-dom";
 
-const Posts = ({feedType}) => {
+const Posts = ({feedType , username , userId}) => {
 
 	const getPostsEndpoint = ()=>{
 		switch(feedType){
@@ -12,6 +12,10 @@ const Posts = ({feedType}) => {
 				  return "api/post/all" ; 
 			case "following" : 
 				  return "api/post/following" ;
+			case "posts" : 
+				return `api/post/user/${username}` ;
+			case "likes" : 
+				return `api/post/likes/${userId}` ; 
 			default:
 				return "api/post/all" ;
 		}
