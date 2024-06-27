@@ -37,27 +37,30 @@ export const createPost = async (req,res)=>{
 }
 
 
-export const deletePost = async (req , res)=>{
-    
-    try{
-        const postId = req.params.id ;
+export const deletePost = async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		if (!post) {
+			return res.status(404).json({ error: "Post not found" });
+		}
 
-        const post = await Post.findById(postId) ; 
+		if (post.user.toString() !== req.user._id.toString()) {
+			return res.status(401).json({ error: "You are not authorized to delete this post" });
+		}
 
-        if(post.user.toString() !== req.user._id) return res.status(404).json({message : "You are not authorized to delete this post"}) ;
+		if (post.img) {
+			const imgId = post.img.split("/").pop().split(".")[0];
+			await cloudinary.uploader.destroy(imgId);
+		}
 
-        if(post.img){
-            await cloudinary.uploader.destroy(post.img.split("/").pop().split(".")[0]);
-        }
+		await Post.findByIdAndDelete(req.params.id);
 
-        await Post.findByIdAndDelete(postId) ; 
-        res.status(201).json({message : "Post deleted successfully"}) ; 
-
-    }catch(error){
-        console.log(`Error in deletePost :- ${error.message}`);
-        res.status(500).json({error : "Internal server error"}) ; 
-    }
-}
+		res.status(200).json({ message: "Post deleted successfully" });
+	} catch (error) {
+		console.log("Error in deletePost controller: ", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 
 export const commentOnPost = async(req , res) => {
@@ -133,7 +136,7 @@ export const getAllPosts = async (req , res)=>{
 				select: "-password",
 			})
 			.populate({
-				path: "comments.user",
+				path: "comment.user",
 				select: "-password",
 			});
 
@@ -164,7 +167,7 @@ export const getLikedPosts = async (req,res)=>{
 				select: "-password",
 			})
 			.populate({
-				path: "comments.user",
+				path: "comment.user",
 				select: "-password",
 			});
 
@@ -191,7 +194,7 @@ export const getFollowingPosts = async (req , res)=>{
 				select: "-password",
 			})
 			.populate({
-				path: "comments.user",
+				path: "comment.user",
 				select: "-password",
 			});
 
@@ -217,7 +220,7 @@ export const getUserPosts = async (req, res) => {
 				select: "-password",
 			})
 			.populate({
-				path: "comments.user",
+				path: "comment.user",
 				select: "-password",
 			});
 
