@@ -107,9 +107,10 @@ export const updateUser = async(req , res)=>{
     try{
         let user = await User.findById(userId) ; 
 
-        if(!currentPassword || !newPassword){
-            return res.status(400).json({error : "Please fill both the current and new Password"}) ; 
-        }
+        
+		if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
+			return res.status(400).json({ error: "Please provide both current password and new password" });
+		}
 
         if(currentPassword && newPassword){
             const isValid = await bcryptjs.compare(currentPassword , user.password) ; 
